@@ -4,7 +4,7 @@
 
 It turns **sanitized incident text** into a small, inspectable review package: a working finding, visible source labels, proposed checks, and a mandatory human decision. The repository now contains an optional server-side Nebius Token Factory adapter for `nvidia/Nemotron-3_5-Lightning`. It is disabled without a server-side key and requires a per-request confirmation in the local UI.
 
-> **Truthful status:** the public GitHub Pages preview remains a deterministic offline mock. The new optional adapter has only been tested with fake responses; there has been no real Nebius/NVIDIA model call, account setup, cloud deployment, or hackathon submission.
+> **Truthful status:** the public GitHub Pages preview remains a deterministic offline mock. The optional adapter has only been tested with fake responses; there has been no real Nebius/NVIDIA model call, Nebius cloud runtime, account setup, or hackathon submission.
 
 ## Product direction
 

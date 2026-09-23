@@ -14,4 +14,4 @@ Checked on 2026-09-23. All provider tests used fake fetch responses; no Nebius, 
 | Keyboard and reduced motion | Playwright tab focus and `prefers-reduced-motion: reduce` emulation | Passed — the skip link and controls are keyboard reachable; reduced motion matched and CSS transition duration was effectively zero |
 | Screenshot review | Local desktop and full-page 390px screenshots | Passed — hierarchy, form, results, and provider disclosure inspected; screenshots are temporary review artifacts, not product assets |
 
-The public GitHub Pages preview was not redeployed by this local validation. Even after source publication, it remains a deterministic mock and does not provide live Nebius/NVIDIA evidence.
+The public GitHub Pages preview was deployed from commit `16d6021` by [workflow run 35822913602](https://github.com/QIU-Guanzong/tracepilot-local-agent-lab/actions/runs/35822913602) and read back at the public URL. The hosted page remains a deterministic mock and does not provide live Nebius/NVIDIA evidence.

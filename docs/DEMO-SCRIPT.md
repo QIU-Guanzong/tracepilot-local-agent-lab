@@ -8,7 +8,7 @@
 
 ## 0:20–0:42 — truthful runtime boundary
 
-“Before I run it, I want to be precise about the current state. This is a local prototype. It uses a deterministic mock provider, does not call Nebius, NVIDIA infrastructure, a cloud model, or a repository, and it does not have write access. The provider seam is here so a real integration can be added later without hiding the decision boundary.”
+“This recording uses the public static preview, which runs a deterministic offline mock. The source also includes an optional local-server path for Nebius Token Factory, but it has only been tested with fake responses. I have not made a real model call. This demo does not contact Nebius, NVIDIA infrastructure, or a repository, and it has no write access.”
 
 ## 0:42–1:15 — input and scope
 
@@ -24,7 +24,7 @@
 
 ## 1:52–2:25 — safety and provider contract
 
-“The last section is the important one. TracePilot marks write intent as false and network intent as false. It does not create a patch, ticket, provider call, or cloud deployment. The human gate names the decision that must be made before change work starts. In the provider contract, a future adapter must keep that same gate, expose its source and scope, and fail closed when policy or data boundaries are missing.”
+“The last section is the important one. In this offline run, TracePilot marks write intent as false and network intent as false. It does not create a patch, ticket, provider call, or cloud deployment. The optional local-server adapter requires a visible data-boundary confirmation before a Nebius request, but that path has not been tested with a real model. The human gate names the decision that must be made before change work starts.”
 
 **On screen:** point to `write intent: false`, then open “Provider contract.”
 
