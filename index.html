@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="TracePilot is a local-only mock for an approval-gated engineering agent." />
+    <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
+    <title>TracePilot · Local Agent Lab</title>
+    <link rel="stylesheet" href="./src/styles.css" />
+  </head>
+  <body>
+    <a class="skip-link" href="#workspace">Skip to workspace</a>
+    <header class="topbar">
+      <div class="brand-lockup" aria-label="TracePilot Local Agent Lab">
+        <span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i></span>
+        <span><strong>TRACEPILOT</strong><small>LOCAL AGENT LAB</small></span>
+      </div>
+      <div class="topbar-status" aria-label="Runtime state">
+        <span class="status-dot" aria-hidden="true"></span>
+        <span>Deterministic mock active</span>
+        <span class="divider" aria-hidden="true"></span>
+        <span>No cloud calls</span>
+      </div>
+    </header>
+
+    <main id="workspace" class="shell">
+      <aside class="side-rail" aria-labelledby="signal-heading">
+        <div class="eyebrow">01 / SIGNAL</div>
+        <h1 id="signal-heading">Turn a failing signal into a reviewable change plan.</h1>
+        <p class="side-intro">This local lab shows a bounded engineering-agent workflow. It does not inspect a repository, call a model, or write code.</p>
+
+        <fieldset class="scenario-picker">
+          <legend>Load a safe sample</legend>
+          <button class="scenario active" type="button" data-scenario="schema" aria-pressed="true">
+            <span>01</span><b>Schema drift</b><small>contract mismatch</small>
+          </button>
+          <button class="scenario" type="button" data-scenario="permissions" aria-pressed="false">
+            <span>02</span><b>Permission regression</b><small>access path</small>
+          </button>
+          <button class="scenario" type="button" data-scenario="latency" aria-pressed="false">
+            <span>03</span><b>Latency budget</b><small>release gate</small>
+          </button>
+        </fieldset>
+
+        <section class="guardrail" aria-labelledby="guardrail-heading">
+          <div class="guardrail-icon" aria-hidden="true">⌁</div>
+          <div>
+            <h2 id="guardrail-heading">Data boundary</h2>
+            <p>Use only sanitized text. Keep credentials, personal data, and private source code out of this lab.</p>
+          </div>
+        </section>
+      </aside>
+
+      <section class="workbench" aria-labelledby="workbench-heading">
+        <div class="workbench-header">
+          <div>
+            <div class="eyebrow">RUN CARD / LOCAL ONLY</div>
+            <h2 id="workbench-heading">Evidence before action</h2>
+          </div>
+          <span id="run-state" class="run-state">Ready</span>
+        </div>
+
+        <form id="incident-form" class="incident-form">
+          <div class="form-row">
+            <label>
+              Incident summary
+              <input id="summary" name="summary" maxlength="120" required autocomplete="off" />
+            </label>
+            <label>
+              System boundary
+              <input id="boundary" name="boundary" maxlength="80" required autocomplete="off" />
+            </label>
+          </div>
+          <label>
+            Sanitized evidence
+            <textarea id="evidence" name="evidence" rows="5" maxlength="800" required></textarea>
+          </label>
+          <div class="form-footer">
+            <p id="form-note" class="form-note" role="status" aria-live="polite">Runs stay in this browser. The result is deterministic mock output.</p>
+            <button id="plan-button" class="primary-button" type="submit">
+              <span aria-hidden="true">↗</span> Build review plan
+            </button>
+          </div>
+        </form>
+
+        <section class="agent-path" aria-labelledby="path-heading">
+          <div class="section-heading">
+            <div class="eyebrow">AGENT PATH</div>
+            <h3 id="path-heading">A small contract with a hard stop</h3>
+          </div>
+          <ol class="path-list">
+            <li data-step="scope"><span class="step-index">01</span><span><b>Scope</b><small>name the boundary</small></span></li>
+            <li data-step="evidence"><span class="step-index">02</span><span><b>Evidence</b><small>keep citations visible</small></span></li>
+            <li data-step="plan"><span class="step-index">03</span><span><b>Plan</b><small>propose reversible work</small></span></li>
+            <li data-step="gate"><span class="step-index">04</span><span><b>Human gate</b><small>do not execute</small></span></li>
+          </ol>
+        </section>
+
+        <section class="result-panel" aria-labelledby="result-heading" aria-live="polite">
+          <div class="result-title-row">
+            <div>
+              <div class="eyebrow">REVIEW PACKAGE</div>
+              <h3 id="result-heading">No plan has run yet</h3>
+            </div>
+            <button id="copy-button" class="quiet-button" type="button" disabled>Copy summary</button>
+          </div>
+          <div id="result-body" class="result-body empty-state">
+            <p>Load a safe sample or add sanitized evidence, then build a local review plan.</p>
+          </div>
+        </section>
+      </section>
+
+      <aside class="contract-panel" aria-labelledby="contract-heading">
+        <div class="eyebrow">PROVIDER BOUNDARY</div>
+        <h2 id="contract-heading">A swappable seam, kept offline.</h2>
+        <p>TracePilot calls a deterministic local provider through a small contract. A remote adapter is intentionally unavailable in this MVP.</p>
+
+        <div class="provider-card">
+          <div class="provider-card-top">
+            <span class="provider-chip">ACTIVE</span>
+            <span>LOCAL-MOCK/0.1</span>
+          </div>
+          <code>createPlan(request) → ProviderResult</code>
+          <dl>
+            <div><dt>Network</dt><dd>blocked by design</dd></div>
+            <div><dt>Writes</dt><dd>none</dd></div>
+            <div><dt>Approval</dt><dd>always manual</dd></div>
+          </dl>
+        </div>
+
+        <details class="contract-details">
+          <summary>Provider contract</summary>
+          <p>Input: summary, boundary, sanitized evidence. Output: citations, findings, proposed checks, and a human decision. See <code>src/provider.js</code>.</p>
+        </details>
+
+        <section class="truth-note" aria-labelledby="truth-heading">
+          <div class="truth-rule" aria-hidden="true"></div>
+          <div>
+            <h3 id="truth-heading">Truthful demo state</h3>
+            <p>This interface has not run on Nebius, NVIDIA infrastructure, or any third-party model. It is a local prototype prepared for later, account-holder-led integration.</p>
+          </div>
+        </section>
+      </aside>
+    </main>
+
+    <footer>
+      <span>TracePilot / local review environment</span>
+      <span>Keyboard ready · narrow-screen ready · reduced motion respected</span>
+    </footer>
+    <script type="module" src="./src/app.js"></script>
+  </body>
+</html>

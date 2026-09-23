@@ -1,0 +1,11 @@
+# Local system and dependencies
+.DS_Store
+node_modules/
+coverage/
+
+# Local configuration and credentials
+.env
+.env.*
+!.env.example
+*.key
+*.pem
