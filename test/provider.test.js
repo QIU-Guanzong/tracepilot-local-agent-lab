@@ -54,3 +54,56 @@ test('rejects oversized evidence before any plan exists', async () => {
   const provider = new DeterministicMockProvider();
   await assert.rejects(provider.createPlan({ ...schemaRequest, evidence: 'a'.repeat(801) }), /800 characters/);
 });
+
+test('enforces the same input bounds for every provider', () => {
+  assert.match(validateRequest({ ...schemaRequest, summary: 's'.repeat(121) }).message, /Summary must be 120/);
+  assert.match(validateRequest({ ...schemaRequest, boundary: 'b'.repeat(81) }).message, /Boundary must be 80/);
+  assert.match(validateRequest({ ...schemaRequest, evidence: 'e'.repeat(801) }).message, /Evidence must be 800/);
+  assert.match(validateRequest({ ...schemaRequest, summary: 12 }).message, /summary/);
+});
+
+test('Nebius browser proxy is disabled without configuration and stays same-origin', async () => {
+  let requests = 0;
+  const disabled = createProvider(ProviderKind.NEBIUS_TOKEN_FACTORY, {
+    fetchImpl: async () => { requests += 1; },
+    enabled: false
+  });
+  await assert.rejects(disabled.createPlan(schemaRequest), /local server with a server-side API key/);
+  assert.equal(requests, 0);
+
+  let outgoing;
+  const enabled = createProvider(ProviderKind.NEBIUS_TOKEN_FACTORY, {
+    enabled: true,
+    fetchImpl: async function (url, options) {
+      assert.equal(this, globalThis);
+      outgoing = { url, options };
+      return new Response(JSON.stringify({
+        provider: 'NEBIUS TOKEN FACTORY',
+        traceId: 'local-12345678',
+        scenario: 'schema',
+        mode: 'model-review-only',
+        finding: 'A cautious finding.',
+        citations: ['User-provided evidence'],
+        proposedChecks: ['Compare the two schemas.'],
+        humanDecision: 'Have the owner review the compatibility boundary.',
+        writeIntent: false,
+        networkIntent: true
+      }), { status: 200, headers: { 'Content-Type': 'application/json' } });
+    }
+  });
+  const result = await enabled.createPlan(schemaRequest);
+  assert.equal(outgoing.url, '/api/plan');
+  assert.equal(outgoing.options.method, 'POST');
+  assert.equal(outgoing.options.headers.Authorization, undefined);
+  assert.deepEqual(JSON.parse(outgoing.options.body), schemaRequest);
+  assert.equal(result.networkIntent, true);
+  assert.equal(result.writeIntent, false);
+});
+
+test('Nebius browser proxy rejects responses that break the review-only contract', async () => {
+  const provider = createProvider(ProviderKind.NEBIUS_TOKEN_FACTORY, {
+    enabled: true,
+    fetchImpl: async () => new Response(JSON.stringify({ mode: 'autonomous', writeIntent: true, networkIntent: true }), { status: 200 })
+  });
+  await assert.rejects(provider.createPlan(schemaRequest), /did not satisfy the review-only contract/);
+});

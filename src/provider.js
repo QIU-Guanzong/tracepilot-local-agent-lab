@@ -4,6 +4,7 @@
  */
 export const ProviderKind = Object.freeze({
   LOCAL_MOCK: 'local-mock',
+  NEBIUS_TOKEN_FACTORY: 'nebius-token-factory',
   REMOTE_PLACEHOLDER: 'remote-placeholder'
 });
 
@@ -37,11 +38,17 @@ export function classifyScenario(input) {
 
 export function validateRequest(input) {
   const fields = ['summary', 'boundary', 'evidence'];
-  const missing = fields.filter((field) => !String(input?.[field] ?? '').trim());
+  const missing = fields.filter((field) => typeof input?.[field] !== 'string' || !input[field].trim());
   if (missing.length) {
     return { valid: false, message: `Missing required field${missing.length > 1 ? 's' : ''}: ${missing.join(', ')}.` };
   }
-  if (String(input.evidence).length > 800) {
+  if (input.summary.length > 120) {
+    return { valid: false, message: 'Summary must be 120 characters or fewer.' };
+  }
+  if (input.boundary.length > 80) {
+    return { valid: false, message: 'Boundary must be 80 characters or fewer.' };
+  }
+  if (input.evidence.length > 800) {
     return { valid: false, message: 'Evidence must be 800 characters or fewer.' };
   }
   return { valid: true };
@@ -92,8 +99,51 @@ export class RemoteProviderPlaceholder {
   }
 }
 
-export function createProvider(kind = ProviderKind.LOCAL_MOCK) {
+export class NebiusTokenFactoryProxyProvider {
+  constructor({ fetchImpl = globalThis.fetch, enabled = false } = {}) {
+    this.kind = ProviderKind.NEBIUS_TOKEN_FACTORY;
+    this.fetchImpl = fetchImpl;
+    this.enabled = enabled;
+  }
+
+  async createPlan(input) {
+    const validation = validateRequest(input);
+    if (!validation.valid) throw new Error(validation.message);
+    if (!this.enabled) {
+      throw new Error('Nebius mode is unavailable here. Run the local server with a server-side API key.');
+    }
+    if (typeof this.fetchImpl !== 'function') throw new Error('This browser does not support provider requests.');
+
+    let response;
+    try {
+      response = await this.fetchImpl.call(globalThis, '/api/plan', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(input)
+      });
+    } catch {
+      throw new Error('The local Nebius proxy could not be reached. No plan was created.');
+    }
+
+    let result;
+    try {
+      result = await response.json();
+    } catch {
+      throw new Error('The local Nebius proxy returned an unreadable response. No plan was created.');
+    }
+    if (!response.ok) {
+      throw new Error(typeof result.error === 'string' ? result.error : 'The Nebius request failed. No plan was created.');
+    }
+    if (!result || result.mode !== 'model-review-only' || result.writeIntent !== false || result.networkIntent !== true) {
+      throw new Error('The provider response did not satisfy the review-only contract. No plan was created.');
+    }
+    return result;
+  }
+}
+
+export function createProvider(kind = ProviderKind.LOCAL_MOCK, options = {}) {
   if (kind === ProviderKind.LOCAL_MOCK) return new DeterministicMockProvider();
+  if (kind === ProviderKind.NEBIUS_TOKEN_FACTORY) return new NebiusTokenFactoryProxyProvider(options);
   if (kind === ProviderKind.REMOTE_PLACEHOLDER) return new RemoteProviderPlaceholder();
   throw new Error(`Unknown provider kind: ${kind}`);
 }

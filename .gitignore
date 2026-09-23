@@ -9,3 +9,5 @@ coverage/
 !.env.example
 *.key
 *.pem
+.playwright-cli/
+output/playwright/

@@ -1,18 +1,17 @@
 # Local validation record
 
-Checked on 2026-09-23 against the **local deterministic mock** only. These results do not establish Nebius, NVIDIA, cloud-model, eligibility, competition, payment, or submission outcomes.
+Checked on 2026-09-23. All provider tests used fake fetch responses; no Nebius, NVIDIA, or other external model request was made. These results do not establish cloud runtime, eligibility, competition, payment, or submission outcomes.
 
 | Check | Evidence | Result |
 | --- | --- | --- |
-| Provider contract unit tests | Bundled Node: `node --test` | Passed — 5 tests cover validation, deterministic output, scenario selection, default local mock, disabled remote placeholder, and evidence limit |
-| Diff hygiene | `git diff --check` | Passed — no whitespace errors before local commit |
-| Static browser load | System Chrome via local server, 1440×1024 | Passed — title and initial controls rendered; console errors: 0; requests stayed local-only |
-| Public static preview | GitHub Pages deployment 35813560905 at the documented public URL | Passed — public page and review-plan flow were read back after deployment |
-| Desktop review flow | Load schema sample → **Build review plan** | Passed — finding, citations, proposed checks, `write intent: false`, and human gate rendered |
-| Narrow-screen flow | System Chrome at 390×844 | Passed — review flow worked; no horizontal overflow |
-| Keyboard flow | Tab traversal to input and native button activation path | Passed — focus reaches the incident form; all actions use semantic buttons/controls with visible focus styling |
-| Reduced motion | Browser emulation with `prefers-reduced-motion: reduce` | Passed — same static information and controls available; CSS forces any future transition/animation to an immediate settled state |
-| Empty / disabled / error / success states | Initial review panel; disabled Copy control; whitespace validation; completed review package | Passed — initial empty guidance, disabled Copy control, inline validation status, and review-ready result are distinct |
-| Motion advisory | `audit_web_motion.py` on project source | Passed — 0 errors, 0 warnings, 0 info findings; advisory only |
+| Provider, proxy, and server tests | Node 26.9: `npm test` | Passed — 18 tests cover input bounds, deterministic fallback, server-key isolation, same-origin routing, call cap, fake response validation, timeouts, and safe errors |
+| Diff hygiene | `git diff --check` | Passed — no whitespace errors |
+| Offline desktop flow | Playwright local server, 1280px viewport | Passed — initial offline state and deterministic review package; no external request; console errors/warnings: 0 |
+| Opt-in flow | Separate local server with an in-process fake provider | Passed — remote option stays hidden until server configuration, unchecked confirmation sends no request, checked synthetic sample returns a bounded review result, and confirmation resets afterward |
+| Request privacy | Playwright request log and fake-provider counter | Passed — the browser called only the loopback `/api/plan`; fake fetch handled the upstream slot, so no external model call occurred |
+| Stale-result invalidation | Browser flow after generating a local plan | Passed — editing an input or selecting another sample clears the old plan and disables Copy until a fresh plan is built |
+| Narrow-screen layout | Playwright at 390×844 | Passed — complete review flow, no horizontal overflow |
+| Keyboard and reduced motion | Playwright tab focus and `prefers-reduced-motion: reduce` emulation | Passed — the skip link and controls are keyboard reachable; reduced motion matched and CSS transition duration was effectively zero |
+| Screenshot review | Local desktop and full-page 390px screenshots | Passed — hierarchy, form, results, and provider disclosure inspected; screenshots are temporary review artifacts, not product assets |
 
-Representative inspected screenshots were captured locally for desktop and 390px mobile. They are not shipped as product assets.
+The public GitHub Pages preview was not redeployed by this local validation. Even after source publication, it remains a deterministic mock and does not provide live Nebius/NVIDIA evidence.

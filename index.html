@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="TracePilot is a local-only mock for an approval-gated engineering agent." />
+    <meta name="description" content="TracePilot is an approval-gated incident review flow, offline by default with an optional Nebius model path." />
     <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
     <title>TracePilot · Local Agent Lab</title>
     <link rel="stylesheet" href="./src/styles.css" />
@@ -17,9 +17,9 @@
       </div>
       <div class="topbar-status" aria-label="Runtime state">
         <span class="status-dot" aria-hidden="true"></span>
-        <span>Deterministic mock active</span>
+        <span id="runtime-indicator">Offline default · remote provider not configured</span>
         <span class="divider" aria-hidden="true"></span>
-        <span>No cloud calls</span>
+        <span id="network-indicator">No remote request sent</span>
       </div>
     </header>
 
@@ -27,7 +27,7 @@
       <aside class="side-rail" aria-labelledby="signal-heading">
         <div class="eyebrow">01 / SIGNAL</div>
         <h1 id="signal-heading">Turn a failing signal into a reviewable change plan.</h1>
-        <p class="side-intro">This local lab shows a bounded engineering-agent workflow. It does not inspect a repository, call a model, or write code.</p>
+        <p class="side-intro">A bounded engineering-agent workflow that turns sanitized incident text into a review plan. It never inspects a repository or writes code.</p>
 
         <fieldset class="scenario-picker">
           <legend>Load a safe sample</legend>
@@ -54,13 +54,26 @@
       <section class="workbench" aria-labelledby="workbench-heading">
         <div class="workbench-header">
           <div>
-            <div class="eyebrow">RUN CARD / LOCAL ONLY</div>
+            <div class="eyebrow">RUN CARD / REVIEW ONLY</div>
             <h2 id="workbench-heading">Evidence before action</h2>
           </div>
           <span id="run-state" class="run-state">Ready</span>
         </div>
 
         <form id="incident-form" class="incident-form">
+          <fieldset class="provider-choice">
+            <legend>Planning provider</legend>
+            <label for="provider-mode">Choose where the plan is created</label>
+            <select id="provider-mode" name="providerMode">
+              <option value="local-mock" selected>Local deterministic mock · offline</option>
+              <option value="nebius-token-factory" disabled>Nebius Token Factory · NVIDIA Nemotron</option>
+            </select>
+            <p id="provider-note" class="provider-note" aria-live="polite">Offline deterministic sample. Nebius mode is available only from the local Node server after a server-side API key is configured.</p>
+            <label id="remote-consent-row" class="remote-consent" hidden>
+              <input id="remote-consent" name="remoteConsent" type="checkbox" disabled />
+              <span>I will send only synthetic or sanitized text that I am authorized to share. I understand provider terms and usage charges may apply.</span>
+            </label>
+          </fieldset>
           <div class="form-row">
             <label>
               Incident summary
@@ -112,17 +125,17 @@
 
       <aside class="contract-panel" aria-labelledby="contract-heading">
         <div class="eyebrow">PROVIDER BOUNDARY</div>
-        <h2 id="contract-heading">A swappable seam, kept offline.</h2>
-        <p>TracePilot calls a deterministic local provider through a small contract. A remote adapter is intentionally unavailable in this MVP.</p>
+        <h2 id="contract-heading">Offline by default. Remote by choice.</h2>
+        <p>The static preview uses a deterministic local provider. A local server can enable an optional Nebius call without exposing its API key to the browser.</p>
 
         <div class="provider-card">
           <div class="provider-card-top">
-            <span class="provider-chip">ACTIVE</span>
-            <span>LOCAL-MOCK/0.1</span>
+            <span id="provider-chip" class="provider-chip">ACTIVE</span>
+            <span id="provider-label">LOCAL-MOCK/0.1</span>
           </div>
-          <code>createPlan(request) → ProviderResult</code>
+          <code>createPlan(request) → review plan</code>
           <dl>
-            <div><dt>Network</dt><dd>blocked by design</dd></div>
+            <div><dt>Default</dt><dd>offline</dd></div>
             <div><dt>Writes</dt><dd>none</dd></div>
             <div><dt>Approval</dt><dd>always manual</dd></div>
           </dl>
@@ -130,22 +143,22 @@
 
         <details class="contract-details">
           <summary>Provider contract</summary>
-          <p>Input: summary, boundary, sanitized evidence. Output: citations, findings, proposed checks, and a human decision. See <code>src/provider.js</code>.</p>
+          <p>Input: summary, boundary, sanitized evidence. The app does not save a request. Remote mode sends these fields to Nebius only after selection and confirmation; see <code>docs/PROVIDER-CONTRACT.md</code>.</p>
         </details>
 
         <section class="truth-note" aria-labelledby="truth-heading">
           <div class="truth-rule" aria-hidden="true"></div>
           <div>
             <h3 id="truth-heading">Truthful demo state</h3>
-            <p>This interface has not run on Nebius, NVIDIA infrastructure, or any third-party model. It is a local prototype prepared for later, account-holder-led integration.</p>
+            <p>The public static preview remains on the deterministic mock. Real model calls require the local Node server and a server-side key; neither key setup nor a live model run is included in this preview.</p>
           </div>
         </section>
       </aside>
     </main>
 
     <footer>
-      <span>TracePilot / local review environment</span>
-      <span>Keyboard ready · narrow-screen ready · reduced motion respected</span>
+      <span>TracePilot / review-first incident planning</span>
+      <span>No writes · remote calls require opt-in · reduced motion respected</span>
     </footer>
     <script type="module" src="./src/app.js"></script>
   </body>
