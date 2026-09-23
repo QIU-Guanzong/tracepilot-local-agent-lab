@@ -39,6 +39,10 @@ node --test
 
 Use any supported local Node runtime; the test suite has no package-install step.
 
+## Public preview
+
+Open [TracePilot live preview](https://qiu-guanzong.github.io/tracepilot-local-agent-lab/). It runs the same deterministic local mock and does not establish a Nebius, NVIDIA, cloud, account, or deployment integration.
+
 ## Provider seam
 
 [`src/provider.js`](src/provider.js) defines the only provider boundary:
