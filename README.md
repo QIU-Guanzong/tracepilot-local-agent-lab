@@ -4,7 +4,7 @@
 
 It turns **sanitized incident text** into a small, inspectable review package: a working finding, visible citations, proposed checks, and a mandatory human decision. The MVP is designed to demonstrate an agent boundary before connecting any real infrastructure. It does **not yet meet** the competition's required Nebius runtime and NVIDIA open-model use.
 
-> **Truthful status:** this repository currently runs only a deterministic local mock. It does **not** call Nebius, NVIDIA infrastructure, a cloud model, a remote API, a repository, or any third-party service. It does not use credentials, personal data, a wallet, or payment. It does not create a remote deployment or hackathon submission.
+> **Truthful status:** this repository currently runs only a deterministic local mock. It does **not** call Nebius, NVIDIA infrastructure, a cloud model, a remote API, a repository, or any third-party service. It does not use credentials, personal data, a wallet, or payment. It does not create a remote provider deployment or hackathon submission.
 
 ## Product direction
 
@@ -41,7 +41,7 @@ Use any supported local Node runtime; the test suite has no package-install step
 
 ## Public preview
 
-Open [TracePilot live preview](https://qiu-guanzong.github.io/tracepilot-local-agent-lab/). It runs the same deterministic local mock and does not establish a Nebius, NVIDIA, cloud, account, or deployment integration.
+Open [TracePilot live preview](https://qiu-guanzong.github.io/tracepilot-local-agent-lab/). It runs the same deterministic local mock and does not establish a Nebius, NVIDIA, cloud-runtime, or account integration.
 
 ## Provider seam
 
@@ -64,7 +64,7 @@ See [provider contract](docs/PROVIDER-CONTRACT.md) for the response shape and no
 
 ## What it does **not** prove
 
-- Any Nebius account, cloud runtime, model invocation, NVIDIA-model use, deployment, performance, or production result.
+- Any Nebius account, cloud runtime, model invocation, NVIDIA-model use, cloud deployment, performance, or production result.
 - Any access to a code repository, incident system, real customer data, credential, account, wallet, payment, or hackathon entry.
 - Eligibility, acceptance, award, settlement, or revenue.
 

@@ -6,10 +6,12 @@ This is a **local, deterministic mock**. It is intentionally offline and does no
 
 It has not:
 
-- created or signed into a Nebius, Devpost, NVIDIA, GitHub, or other account;
+- created or signed into a Nebius, Devpost, NVIDIA, or other new provider account;
 - accepted terms, made a purchase, activated billing, used a payment method, or handled a wallet;
 - transmitted private code, customer data, personal data, credentials, tokens, or secrets;
-- deployed an app, recorded/uploaded a video, published a repository, or submitted to a competition.
+- configured a Nebius or AI Cloud runtime, called an external model, recorded/uploaded a video, or submitted to a competition.
+
+The source and static preview are publicly published. They expose only the deterministic local mock and no provider integration.
 
 ## Minimum human gates before a real integration
 

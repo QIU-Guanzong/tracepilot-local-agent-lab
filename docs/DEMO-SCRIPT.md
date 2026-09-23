@@ -24,7 +24,7 @@
 
 ## 1:52–2:25 — safety and provider contract
 
-“The last section is the important one. TracePilot marks write intent as false and network intent as false. It does not create a patch, ticket, or deployment. The human gate names the decision that must be made before change work starts. In the provider contract, a future adapter must keep that same gate, expose its source and scope, and fail closed when policy or data boundaries are missing.”
+“The last section is the important one. TracePilot marks write intent as false and network intent as false. It does not create a patch, ticket, provider call, or cloud deployment. The human gate names the decision that must be made before change work starts. In the provider contract, a future adapter must keep that same gate, expose its source and scope, and fail closed when policy or data boundaries are missing.”
 
 **On screen:** point to `write intent: false`, then open “Provider contract.”
 
@@ -37,4 +37,4 @@
 - State the local mock boundary aloud.
 - Do not display private code, credentials, personal data, or any real customer record.
 - Do not show a cloud console unless it is actually configured and permissioned by the account holder.
-- Do not claim model, Nebius, NVIDIA, deployment, award, payment, or submission evidence that is unavailable.
+- Do not claim model, Nebius, NVIDIA cloud deployment, award, payment, or submission evidence that is unavailable.
